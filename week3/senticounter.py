@@ -7,7 +7,8 @@ def loadLexicon(fname):
     lex_conn = open(fname)
     # add every word in the file to the set
     for line in lex_conn:
-        newLex.add(line.strip())  # remember to strip to remove the lin-change character
+        # remember to strip to remove the lin-change character
+        newLex.add(line.strip())
     lex_conn.close()
     return newLex
 
@@ -32,3 +33,13 @@ def run(path):
 
 if __name__ == "__main__":
     print(run('textfile'))
+    #
+    # if x == 0 or y == 0:
+    #     print("input error")
+    # elif x > y:
+    #     r1 = x / y
+    #     r2 = x % y
+    # else:
+    #     r1 = y / x
+    #     r2 = y % x
+    # print("商= ", r1, " 余数= ", r2)
