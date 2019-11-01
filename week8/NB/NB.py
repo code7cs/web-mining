@@ -30,6 +30,7 @@ from sklearn.svm import LinearSVC
 from sklearn.multiclass import OneVsOneClassifier
 from mlxtend.classifier import StackingClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors.nearest_centroid import NearestCentroid
 
 
 # read the reviews and their polarities from a given file
@@ -60,21 +61,25 @@ counts_test = counter.transform(rev_test)  # transform the testing data
 # clf = MultinomialNB()
 
 # clf = AdaBoostClassifier(n_estimators=500)
-clf = RandomForestClassifier(n_estimators=10)
-boosting = AdaBoostClassifier(base_estimator=clf, n_estimators=1)
-# clf = GradientBoostingClassifier(n_estimators=500, learning_rate=1.0, max_depth=1, random_state=0)
+
+# clf = RandomForestClassifier(n_estimators=10)
+# boosting = AdaBoostClassifier(base_estimator=clf, n_estimators=1)
+
+clf = GradientBoostingClassifier(n_estimators=200, learning_rate=1.0, max_depth=1, random_state=0)
 # train all classifier on the same datasets
 # clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
-
 # clf = BaggingClassifier(KNeighborsClassifier(), max_samples=0.8, max_features=0.1)
 # for i in range(10, 200):
 # clf = RandomForestClassifier(n_estimators=i)
-clf1 = AdaBoostClassifier(n_estimators=12)
-clf = RandomForestClassifier(n_estimators=123)
+# clf = AdaBoostClassifier(n_estimators=12)
+# clf = RandomForestClassifier(n_estimators=123)
 clf3 = MultinomialNB()
 lr = LogisticRegression()
-sclf = StackingClassifier(classifiers=[clf1, clf3], meta_classifier=lr)
+# sclf = StackingClassifier(classifiers=[clf1, clf3], meta_classifier=lr)
 # clf = DecisionTreeClassifier(criterion='entropy', max_depth=1)
+
+# for i in range(20, 100):
+# clf = KNeighborsClassifier(n_neighbors=10)
 clf.fit(counts_train, labels_train)
 
 # use hard voting to predict (majority voting)
