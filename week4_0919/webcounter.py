@@ -64,7 +64,7 @@ def run(url, w1, w2):
     if answer == set():  # if answer is empty, return {}
         return {}
     else:
-        return answerw
+        return answer
 
 
 # the url below is my own gist text web page for test

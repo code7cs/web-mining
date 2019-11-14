@@ -35,7 +35,7 @@ def loadData(fname):
 
 rev_train, labels_train = loadData('reviews_train.txt')
 rev_test, labels_test = loadData('reviews_test.txt')
-
+print(labels_test)
 # Build a counter based on the training dataset
 counter = CountVectorizer()
 counter.fit(rev_train)
