@@ -1,59 +1,57 @@
 from selenium import webdriver
 import time
 import codecs
+import re
 
-url = 'https://dl.acm.org/results.cfm?query=kdd&Go.x=0&Go.y=0'
-
-# open the browser and visit the url
 driver = webdriver.Chrome('./chromedriver')
-driver.get(url)
+fw = codecs.open('articles_kdd.txt', 'w', encoding='utf8')
 
-# scroll down twice to load more articles
-driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-time.sleep(2)
-# driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-# time.sleep(2)
+for i in range(0, 5):
+    time.sleep(2)
+    url = 'https://dl.acm.org/results.cfm?query=kdd&start=' + str(i * 20)
+    # open the browser and visit the url
+    driver.get(url)
+    time.sleep(1)
 
-# find all elements with a class that ends in 'article-text'
-articles = driver.find_elements_by_css_selector("[class*=original-article]")
+    # scroll down twice to load more articles
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(2)
 
-# write the articles to a file
-fw = codecs.open('articles.txt', 'w', encoding='utf8')
-for article in articles:
-    txt, comments, retweets, likes, date = 'NA', 'NA', 'NA', 'NA', 'NA'
+    articles = driver.find_elements_by_css_selector("[class=details]")
 
-    try:
-        txt = article.find_element_by_css_selector("[class$=article-text]").text
-    except:
-        print('no text')
+    for article in articles:
+        authorName, paperAbstract, paperTitle, institutions, publicationYear = 'NA', 'NA', 'NA', 'NA', 'NA'
 
-    # comments
-    try:
-        commentElement = article.find_element_by_css_selector("[class$=js-actionReply]")
-        comments = commentElement.find_element_by_css_selector("[class=ProfileTweet-actionCountForPresentation]").text
-    except:
-        print('no comments')
+        try:
+            authorName = article.find_element_by_css_selector("[class=authors]").text
+        except:
+            print('no author')
 
-    try:
-        retweetElement = article.find_element_by_css_selector("[class$=js-actionRetweet]")
-        retweets = retweetElement.find_element_by_css_selector('[class=ProfileTweet-actionCountForPresentation]').text
-    except:
-        print('no retweets')
+        try:
+            paperAbstract = article.find_element_by_css_selector("[class=abstract]").text
+        except:
+            print('no paperAbstract')
 
-    try:
-        likeElement = article.find_element_by_css_selector("[class$=js-actionFavorite]")
-        likes = likeElement.find_element_by_css_selector('[class=ProfileTweet-actionCountForPresentation]').text
-    except:
-        print('no likes')
+        try:
+            paperTitle = article.find_element_by_css_selector("[class=title]").text
+        except:
+            print('no paperTitle')
 
-    try:
-        time = article.find_element_by_css_selector("[class*=time]")
-        date = time.find_element_by_css_selector("[class*=_timestamp]").text
-    except:
-        print('no date')
+        try:
+            institutions = \
+            article.find_element_by_css_selector("[class=source]").find_elements_by_tag_name("span")[1].text.split(":")[
+                0]
+        except:
+            print('no institutions')
 
-    fw.write(txt.replace('\n', ' ') + '\t' + str(comments) + '\t' + str(retweets) + '\t' + str(likes) + '\t' + str(
-        date) + '\n')
+        try:
+            publicationYear = re.findall(r"\d+", article.find_element_by_css_selector("[class=publicationDate]").text)[
+                0]
+        except:
+            print('no publicationYear')
+
+        fw.write(str(authorName) + '\t\t' + str(paperAbstract) + '\t\t' + str(paperTitle) + '\t\t' + str(institutions)
+                 + '\t\t' + publicationYear + '\n')
 
 fw.close()
 
